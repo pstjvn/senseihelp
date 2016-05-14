@@ -48,7 +48,8 @@ help.component.IconContainer = goog.defineClass(pstj.material.Element, {
     this.animation_.setStartPoint(goog.style.getPageOffset(this.getElementStrict()));
     this.animation_.setEndPoint(this.targetPoint_);
     this.animation_.setDuration(500);
-    this.animation_.setup();
+    this.animation_.setup(this.getElementStrict());
+    this.animation_.start();
   },
 
   /** @override */

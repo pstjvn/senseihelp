@@ -189,6 +189,7 @@ jsfilelist:
 			--dependency_mode=STRICT \
 			--entry_point=goog:$(ns) \
 			--output_manifest $(manifest) \
+			--language_out=ECMASCRIPT5 \
 			--js_output_file /tmp/closure_compiler_build \
 			$(compiler_js_sources)
 
