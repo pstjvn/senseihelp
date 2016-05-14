@@ -1,0 +1,108 @@
+{namespace help.template}
+
+/** Used only to test seed project */
+{template .Container}
+<div class="{css help-container}">
+  <div class="{css help-container-inner}">
+  </div>
+</div>
+{/template}
+
+/** The help content should be printed via this template */
+{template .Content}
+  {@param main: list<string>}
+  {@param items: list<list<string>>}
+  <div class="{css help-content}">
+    {call .Main}
+      {param lines: $main /}
+    {/call}
+    {call .Items}
+      {param items: $items /}
+    {/call}
+    {call .Spacer /}
+  </div>
+{/template}
+
+/** The main (heading) help content should be print via this template */
+{template .Main}
+  {@param lines: list<string>}
+  <div class="{css help-main}">
+    {foreach $line in $lines}
+      <div class="{css help-paragraph}">
+        {$line}
+      </div>
+    {/foreach}
+  </div>
+{/template}
+
+/** Template to use for all help items on a page. */
+{template .Items}
+  {@param items: list<list<string>>}
+  <div class="{css help-items}">
+    <h6>{msg desc="Help items separator label"}Help for specific items.{/msg}</h6>
+    {foreach $item in $items}
+      {call .Item}
+        {param lines: $item /}
+        {param index: index($item) /}
+      {/call}
+    {/foreach}
+  </div>
+{/template}
+
+/** The template for a single help item */
+{template .Item}
+  {@param lines: list<string>}
+  {@param index: int}
+  <div class="{css help-item}" data-index="{$index}">
+  {foreach $line in $lines}
+    <div class="{css help-item-paragpraph}">
+      {if isFirst($line)}
+        {call .ItemNumber}
+          {param index: $index + 1 /}
+        {/call}
+      {/if}
+      {$line}
+    </div>
+  {/foreach}
+  </div>
+{/template}
+
+/** The template for numbering the items in the help */
+{template .ItemNumber}
+  {@param index: int}
+  <div class="{css help-item-indicator}">
+    <span>{$index}</span>
+  </div>
+{/template}
+
+{template .Spacer}
+  <div class="{css help-spacer}"></div>
+{/template}
+
+/** The template for the icon used as help icon in the project */
+{template .HelpIcon}
+{@param color: string}
+<svg is class="{css help-icon}" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%"
+    viewBox="0 0 290.1 379" enable-background="new 0 0 290.1 379" xml:space="preserve">
+  <g>
+    <path fill="{$color}" d="M199.8,154.5c-18.1,0.6-36.3,8.1-46.5,23.6c-4,6-7.1,13.5-6.4,20.9c0.4,4.7,2.7,8.5,6,10.9
+            c3.2,2.3,7.5,3.4,12,2.6c8.6-1.4,9-12.1,11.8-18.5c3.1-7,9.1-13.8,16.5-16.2c8.3-2.7,18.9,0,25.1,6.2c8.4,8.3,6.4,21-1.9,28.8
+            c-3.9,3.7-7.8,7.4-11.8,11.1c-9.6,9-20.7,19.7-20.3,34.1c0.1,4.3,0.4,9.2,2.8,12.9c3.1,4.7,10.6,6.2,15.6,3.7
+            c5.4-2.7,7.9-9,8.2-14.8c0.4-10.2,13.9-19.4,13.9-19.4s28.4-20.8,28.4-42.1S235.9,153.3,199.8,154.5z"/>
+    <circle fill="{$color}" cx="198.2" cy="301.5" r="16.1"/>
+    <path fill="{$color}" d="M54.3,278.9c0-12.6,0-134.4,0-134.4c11.2,0,22.4,0,33.6,0c4,0,7.9-0.2,11.9,0c7.1,0.3,12.7-0.9,17.2-6.9
+            c5-6.6,3.9-15.2,3.9-23c0-7.8,0-15.7,0-23.5c0-4.3,0-8.5,0-12.8c0,0,85.7,0,85.7,0c7.2,0,13.8,8.5,14.2,15.1
+            c0.6,8.4,0.2,17.1,0,25.6v27.3c0.1,0,17.1,0,17.1,0v-54c-5.3-31.5-33.2-30.8-33.2-30.8s-83.3,0-87.2,0c-3.8,0-7,1.5-7,1.5
+            S49,124.1,44.2,129.1c-4.8,5-7.3,10-7.3,10l0.3,141c3.3,30.3,30.2,32.8,30.2,32.8h84.8v-17.4H72.1C58.4,294.8,55,285.4,54.3,278.9z"/>
+  </g>
+</svg>
+{/template}
+
+{template .IconContainer}
+  <div is class="{css help-icon-container} {css core-tap}" style="width: 50px; height: 50px;">
+    {call .HelpIcon}
+      {param color: '#000000' /}
+    {/call}
+  </div>
+{/template}

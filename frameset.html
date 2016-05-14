@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Please fill in your title...</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta content="width=device-width, maximum-scale=1.0, user-scalable=no" name="viewport">
+    <!--<link rel="stylesheet" href="build/app.css" type="text/css">-->
+    <link rel="stylesheet/less" type="text/css" href="less/app.less">
+    <script> var less = { env: "development", poll: 1000 }; </script>
+    <script src="libs/less.js"></script>
+    <style>
+      div > svg > g > * {
+        fill: black;
+      }
+      div > svg {
+        width: 100%;
+        height: 100%;
+      }
+      .icon {
+        transition: transform 165ms ease-out;
+      }
+    </style>
+    <script>
+      function hide(el) {
+        console.log(el);
+        el.style.transform = 'translate(90px, 90px) scale(0.1)';
+      }
+    </script>
+  </head>
+  <body style="overflow: hidden;">
+    <!-- <script src="build/app-cssmap.js"></script>
+    <script src="../../library/closure/goog/base.js"></script>
+    <script src="../../templates/deps.js"></script>
+    <script src="../pstj/deps.js"></script>
+    <script src="build/deps.js"></script>
+    <script>goog.require('app');</script> -->
+    <div style="width: 100%; height: 100%; background-color: white;"></div>
+    <div style="width: 80%; height: 120px; position: absolute; bottom: 0; left: 50%; background-color: transparent; opacity: 1; transform: translate(-50%, 0); border: 5px solid black; border-bottom: none; border-radius: 15px 15px 0 0; box-shadow: 0 0 15px black">
+      <iframe width="100%" height="100%" src="frame.html" frameborder="0"></iframe>
+    </div>
+    <div class="icon" style="position: absolute; bottom: 30px; right: 30px; width: 60px; height: 60px; box-shadow: 0 0 2px 2px black" onclick="hide(this)">
+      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="290" height="379"
+           viewBox="0 0 290.1 379" enable-background="new 0 0 290.1 379" xml:space="preserve">
+        <g>
+          <path d="M199.8,154.5c-18.1,0.6-36.3,8.1-46.5,23.6c-4,6-7.1,13.5-6.4,20.9c0.4,4.7,2.7,8.5,6,10.9
+            c3.2,2.3,7.5,3.4,12,2.6c8.6-1.4,9-12.1,11.8-18.5c3.1-7,9.1-13.8,16.5-16.2c8.3-2.7,18.9,0,25.1,6.2c8.4,8.3,6.4,21-1.9,28.8
+            c-3.9,3.7-7.8,7.4-11.8,11.1c-9.6,9-20.7,19.7-20.3,34.1c0.1,4.3,0.4,9.2,2.8,12.9c3.1,4.7,10.6,6.2,15.6,3.7
+            c5.4-2.7,7.9-9,8.2-14.8c0.4-10.2,13.9-19.4,13.9-19.4s28.4-20.8,28.4-42.1S235.9,153.3,199.8,154.5z"/>
+          <circle cx="198.2" cy="301.5" r="16.1"/>
+          <path d="M54.3,278.9c0-12.6,0-134.4,0-134.4c11.2,0,22.4,0,33.6,0c4,0,7.9-0.2,11.9,0c7.1,0.3,12.7-0.9,17.2-6.9
+            c5-6.6,3.9-15.2,3.9-23c0-7.8,0-15.7,0-23.5c0-4.3,0-8.5,0-12.8c0,0,85.7,0,85.7,0c7.2,0,13.8,8.5,14.2,15.1
+            c0.6,8.4,0.2,17.1,0,25.6v27.3c0.1,0,17.1,0,17.1,0v-54c-5.3-31.5-33.2-30.8-33.2-30.8s-83.3,0-87.2,0c-3.8,0-7,1.5-7,1.5
+            S49,124.1,44.2,129.1c-4.8,5-7.3,10-7.3,10l0.3,141c3.3,30.3,30.2,32.8,30.2,32.8h84.8v-17.4H72.1C58.4,294.8,55,285.4,54.3,278.9z
+            "/>
+        </g>
+        </svg>
+    </div>
+  </body>
+</html>

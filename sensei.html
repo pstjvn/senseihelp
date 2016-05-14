@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Sensei portal</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta content="width=device-width, maximum-scale=1.0, user-scalable=no" name="viewport">
+    <!--<link rel="stylesheet" href="build/app.css" type="text/css">-->
+    <link rel="stylesheet/less" type="text/css" href="less/app.less">
+    <script> var less = { env: "development", poll: 1000 }; </script>
+    <script src="libs/less.js"></script>
+    <style>
+      body {
+        min-height: 2000px;
+        background-color: red;
+      }
+      .help-hide-target {
+        position: fixed;
+        top: 10px;
+        right: 150px;
+        width: 30px;
+        height: 30px;
+        background-color: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="help-hide-target"></div>
+    <script src="build/app-cssmap.js"></script>
+    <script src="../../library/closure/goog/base.js"></script>
+    <script src="../../templates/deps.js"></script>
+    <script src="../pstj/deps.js"></script>
+    <script src="build/deps.js"></script>
+    <script>goog.require('inject');</script>
+  </body>
+</html>

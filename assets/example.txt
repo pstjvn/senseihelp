@@ -1,0 +1,14 @@
+General help text - will be displayed in a way as to allow the content to be a paragraph.
+It can span multiple lines.
+
+If a empty lines is added it will be a separate parapgraph.
+
+And one more.
+
+# help text number 1
+
+# help text number two which is a longer help text.
+
+It can also span multiple lines
+
+# end of help.
