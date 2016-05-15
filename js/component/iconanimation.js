@@ -4,6 +4,11 @@ goog.require('goog.functions');
 goog.require('goog.math.Coordinate');
 goog.require('goog.math.Line');
 goog.require('pstj.animation.State');
+goog.require('pstj.animation.RafSI');
+goog.require('pstj.animation.create');
+goog.require('pstj.lab.style.css');
+goog.require('pstj.math.utils');
+goog.require('hepl.easing');
 
 /**
  * Implements the icon animation for the help system.
@@ -26,6 +31,19 @@ help.component.IconAnimation = goog.defineClass(null, {
     this.timingFunction_ = goog.functions.identity;
     /** @private {number} */
     this.ts_ = 0;
+    /** @private {function(): void} */
+    this.animation_ = pstj.animation.create(
+        goog.asserts.assertFunction(goog.bind(this.measure, this)),
+        goog.asserts.assertFunction(goog.bind(this.mutate, this)), null);
+    /** @private {number} */
+    this.startTime_ = 0;
+    /** @private {number} */
+    this.endTime_ = 0;
+    this.element_ = null;
+  },
+
+  setElement: function(el) {
+    this.element_ = el;
   },
 
   /** @param {!goog.math.Coordinate} point */
@@ -48,11 +66,18 @@ help.component.IconAnimation = goog.defineClass(null, {
     this.timingFunction_ = fn;
   },
 
+  start: function() {
+    this.startTime_ = goog.now();
+    this.endTime_ = this.startTime_ + this.duration_;
+    this.animation_();
+  },
+
   /**
    * Sets up the internal state so we can use the object to produce the
    * bindings.
    */
-  setup: function() {
+  setup: function(el) {
+    this.element_ =  el;
     this.findPointOfIsoscelesTriangle();
   },
 
@@ -70,7 +95,7 @@ help.component.IconAnimation = goog.defineClass(null, {
 
   /**
    * Provides the measure phase.
-   * @param {!pstj.animation.State} state
+   * @param {pstj.animation.State} state
    */
   measure: function(state) {
     this.ts_ = state.timestamp;
@@ -78,10 +103,19 @@ help.component.IconAnimation = goog.defineClass(null, {
 
   /**
    * Provides the mutate phase
-   * @param {!pstj.animation.State} state
+   * @param {pstj.animation.State} state
    */
   mutate: function(state) {
-
+    var fraction = pstj.math.utils.getFractionFromValue(this.ts_ - this.startTime_, this.duration_);
+    if (fraction < 1) {
+      this.animation_();
+    }
+    pstj.lab.style.css.setTranslationText(this.element_, 'scale(' +
+        (1 - help.easing.scale(fraction)) +
+        ')');
+    // console.log(help.component.IconAnimation.ScaleBezier.solveYValueFromXValue(fraction));
   }
 });
+
+pstj.animation.Scheduler.setSchedulerImplementation(new pstj.animation.RafSI());
 
