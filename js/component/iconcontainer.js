@@ -35,7 +35,6 @@ help.component.IconContainer = goog.defineClass(pstj.material.Element, {
 
   /** @override */
   onTap: function(e) {
-    console.log('Tapped');
     this.goToTarget(document.querySelector('.' + help.HIDE_TARGET_CLASS));
   },
 
@@ -80,6 +79,7 @@ help.component.IconContainerRenderer = goog.defineClass(pstj.material.ElementRen
       'right': '10px',
       'border-radius': '5px',
       'box-shadow': '0 0 5px black',
+      'transformOrigin': '0 0',
       'z-index': help.data.Layer.HELP_ICON
     });
   },
