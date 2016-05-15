@@ -1,7 +1,6 @@
 goog.provide('help.component.IconAnimation');
 
 goog.require('goog.functions');
-goog.require('goog.math.Bezier');
 goog.require('goog.math.Coordinate');
 goog.require('goog.math.Line');
 goog.require('pstj.animation.State');
@@ -9,6 +8,7 @@ goog.require('pstj.animation.RafSI');
 goog.require('pstj.animation.create');
 goog.require('pstj.lab.style.css');
 goog.require('pstj.math.utils');
+goog.require('hepl.easing');
 
 /**
  * Implements the icon animation for the help system.
@@ -111,17 +111,9 @@ help.component.IconAnimation = goog.defineClass(null, {
       this.animation_();
     }
     pstj.lab.style.css.setTranslationText(this.element_, 'scale(' +
-        (1 - help.component.IconAnimation.ScaleBezier.solveYValueFromXValue(fraction)) +
+        (1 - help.easing.scale(fraction)) +
         ')');
     // console.log(help.component.IconAnimation.ScaleBezier.solveYValueFromXValue(fraction));
-  },
-
-  statics: {
-    /**
-     * Provides the bezier curve to be used for scaling.
-     * const {!goog.math.Bezier}
-     */
-    ScaleBezier: new goog.math.Bezier(0, 0, 1, 0, 1, 0.09, 1, 1)
   }
 });
 
