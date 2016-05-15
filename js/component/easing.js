@@ -3,7 +3,7 @@ goog.provide('help.easing');
 goog.require('goog.math.Bezier');
 
 /** @private {!goog.math.Bezier} */
-help.easing.scale_ = new goog.math.Bezier(0, 0, 1, 0, 1, 0.09, 1, 1);
+help.easing.scale_ = new goog.math.Bezier(0, 0, 1, 0, .72, .38, 1, 1);
 
 /** @private {!goog.math.Bezier} */
 help.easing.move_ = new goog.math.Bezier(0, 0, .64, .01, .68, 1, 1, 1);
@@ -32,3 +32,10 @@ help.easing.scale = function(t) {
 help.easing.move = function(t) {
   return help.easing.move_.solveYValueFromXValue(t);
 };
+
+/**
+ * The angle we will use in rotation - for now we use iso-triangle, thus
+ * 60 degrees.
+ * @const {!number}
+ */
+help.easing.Angle = 60;
