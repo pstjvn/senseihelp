@@ -120,6 +120,7 @@ all: builddirectories \
 		make jsfilelist ns=worker; \
 		make jsworker ns=worker; \
 	fi
+	@if [ -e "$(js_min_file).map" ]; then mv $(js_min_file).map $(ns).min.js.map; fi
 
 worker: builddirectories schemes
 	make jsfilelist ns=worker
