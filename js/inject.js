@@ -5,7 +5,10 @@
 goog.provide('inject');
 
 goog.require('help.component.IconContainer');
+goog.require('help.service.Help');
 goog.require('pstj.storage.Storage');
+
+var hs = new help.service.Help();
 
 goog.exportSymbol('closure.help.showIcon', function() {
   var cnt = new help.component.IconContainer();
@@ -22,3 +25,8 @@ goog.exportSymbol('closure.help.activateButtonIfNeeded', function() {
     }
   }
 });
+
+if (goog.DEBUG) {
+  var cnt = new help.component.IconContainer();
+  cnt.render(document.body);
+}

@@ -23,6 +23,8 @@ goog.require('pstj.math.utils');
 help.component.IconAnimation = goog.defineClass(goog.events.EventTarget, {
   constructor: function() {
     goog.events.EventTarget.call(this);
+    /** @private {boolean} */
+    this.useScaling_ = false;
     /** @private {number} */
     this.duration_ = 1000;
     /** @private {number} */
@@ -59,8 +61,10 @@ help.component.IconAnimation = goog.defineClass(goog.events.EventTarget, {
    * @param {!Element} el The element we will be animating.
    * @param {!Element} targetElement The element which we want to measure and
    * animate to.
+   * @param {boolean=} opt_usescale If we should use the scale as well.
    */
-  setup: function(el, targetElement) {
+  setup: function(el, targetElement, opt_usescale) {
+    this.useScaling_ = !!opt_usescale;
     this.element_ = el;
     var cr = targetElement.getBoundingClientRect();
     var ecr = el.getBoundingClientRect();
@@ -124,6 +128,6 @@ help.component.IconAnimation = goog.defineClass(goog.events.EventTarget, {
       document.body.appendChild(div);
     }
     pstj.lab.style.css.setTranslation(
-        this.element_, pos.x, pos.y, 'px', `scale(${scale})`);
+        this.element_, pos.x, pos.y, 'px', 'scale(' + scale + ')');
   }
 });

@@ -5,14 +5,27 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta content="width=device-width, maximum-scale=1.0, user-scalable=no" name="viewport">
     <!--<link rel="stylesheet" href="build/app.css" type="text/css">-->
-    <link rel="stylesheet/less" type="text/css" href="less/app.less">
+    <!-- <link rel="stylesheet/less" type="text/css" href="less/app.less">
     <script> var less = { env: "development", poll: 1000 }; </script>
-    <script src="libs/less.js"></script>
+    <script src="libs/less.js"></script> -->
     <style>
       body {
         min-height: 2000px;
         background-color: wgite;
       }
+
+      .help-icon-container {
+        transition: background-color 500ms linear;
+        cursor: pointer;
+        background-color: rgba(255,255,255,0.8);
+        border-radius: 5px;
+        box-shadow: 0 0 5px black;
+      }
+
+      .help-icon-container:hover {
+        background-color: rgba(255,255,0,0.8);
+      }
+
       .help-hide-target {
         position: fixed;
         top: 10px;
@@ -21,15 +34,38 @@
         height: 30px;
         background-color: blue;
       }
+
+      .help-container {
+        background-color: rgba(0,0,0,.6);
+        border: 5px solid rgba(0,0,0,.6);
+        background-clip: padding-box;
+        border-radius: 5px 5px 0px 0px;
+        transform: translate3d(-50%, 100%, 0);
+        transition: transform 500ms ease-out;
+      }
+
+      .help-container-open {
+        transform: translate3d(-50%, 0, 0);
+      }
+
+      .help-button-close {
+        position: absolute;
+        top: 0;
+        right: 15px;
+        background-color: yellow;
+        padding: 4px 6px;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
     <div class="help-hide-target"></div>
-    <script src="build/app-cssmap.js"></script>
+    <script type="text/javascript" src="build/inject.min.js"></script>
+<!--     <script src="build/app-cssmap.js"></script>
     <script src="../../library/closure/goog/base.js"></script>
     <script src="../../templates/deps.js"></script>
     <script src="../pstj/deps.js"></script>
     <script src="build/deps.js"></script>
-    <script>goog.require('inject');</script>
+    <script>goog.require('inject');</script> -->
   </body>
 </html>
