@@ -17,27 +17,24 @@ help.component.Button = goog.defineClass(pstj.app.UiControl, {
    *     document interaction.
    */
   constructor: function(opt_content, opt_renderer, opt_domHelper) {
-    pstj.material.Element.call(this, opt_content, opt_renderer, opt_domHelper);
+    pstj.app.UiControl.call(this, opt_content, opt_renderer, opt_domHelper);
     this.setUsePointerAgent(true);
   },
 
   /** @override */
-  onTap: function(e) {
-    this.getController().push(help.topic.HIDE, undefined);
-  }
+  onTap: function(e) { this.getController().push(help.topic.HIDE, undefined); }
 });
 
 /** The renderer */
-help.component.ButtonRenderer = goog.defineClass(pstj.material.ElementRenderer, {
-  constructor: function() {
-    pstj.material.ElementRenderer.call(this);
-  },
+help.component.ButtonRenderer =
+    goog.defineClass(pstj.material.ElementRenderer, {
+      constructor: function() { pstj.material.ElementRenderer.call(this); },
 
-  statics: {
-    /** @const {string} */
-    CSS_CLASS: goog.getCssName('help-button')
-  }
-});
+      statics: {
+        /** @const {string} */
+        CSS_CLASS: goog.getCssName('help-button')
+      }
+    });
 
 // Register for default renderer.
 goog.ui.registry.setDefaultRenderer(

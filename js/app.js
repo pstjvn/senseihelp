@@ -11,6 +11,6 @@
 
 goog.provide('app');
 
-(function() {
-  console.log('HELP Frame loaded');
-})();
+goog.require('help.service.Viz');
+
+help.service.Viz.getInstance().init();

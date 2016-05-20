@@ -31,42 +31,30 @@ help.component.Icon = goog.defineClass(pstj.material.Element, {
    * Sets the color to be used by the icon.
    * @param {string} color The new color to use.
    */
-  setColor: function(color) {
-    this.color_ = goog.color.parse(color);
-  },
+  setColor: function(color) { this.color_ = goog.color.parse(color); },
 
   /**
    * Getter for the currently used color.
    * @return {string}
    */
-  getColor: function() {
-    return this.color_.hex;
-  }
+  getColor: function() { return this.color_.hex; }
 });
 
 /** Imlements the controller renderer */
 help.component.IconRenderer = goog.defineClass(pstj.material.ElementRenderer, {
-  constructor: function() {
-    pstj.material.ElementRenderer.call(this);
-  },
+  constructor: function() { pstj.material.ElementRenderer.call(this); },
 
   /** @override */
-  getTemplate: function(model) {
-    return help.template.HelpIcon(model);
-  },
+  getTemplate: function(model) { return help.template.HelpIcon(model); },
 
   /** @override */
   generateTemplateData: function(icon) {
     goog.asserts.assertInstanceof(icon, help.component.Icon);
-    return {
-      color: icon.getColor()
-    };
+    return {color: icon.getColor()};
   },
 
   /** @override */
-  getCssClass: function() {
-    return help.component.IconRenderer.CSS_CLASS;
-  },
+  getCssClass: function() { return help.component.IconRenderer.CSS_CLASS; },
 
   statics: {
     /** @const {string} */
@@ -75,12 +63,11 @@ help.component.IconRenderer = goog.defineClass(pstj.material.ElementRenderer, {
 });
 
 // Register for default renderer.
-goog.ui.registry.setDefaultRenderer(help.component.Icon,
-    help.component.IconRenderer);
+goog.ui.registry.setDefaultRenderer(
+    help.component.Icon, help.component.IconRenderer);
 
 
 // Register decorator factory function.
 goog.ui.registry.setDecoratorByClassName(
-    help.component.IconRenderer.CSS_CLASS, function() {
-      return new help.component.Icon(null);
-    });
+    help.component.IconRenderer.CSS_CLASS,
+    function() { return new help.component.Icon(null); });

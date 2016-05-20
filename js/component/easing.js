@@ -32,10 +32,3 @@ help.easing.scale = function(t) {
 help.easing.move = function(t) {
   return help.easing.move_.solveYValueFromXValue(t);
 };
-
-/**
- * The angle we will use in rotation - for now we use iso-triangle, thus
- * 60 degrees.
- * @const {!number}
- */
-help.easing.Angle = 60;

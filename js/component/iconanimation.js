@@ -1,11 +1,10 @@
 goog.provide('help.component.IconAnimation');
 
 goog.require('goog.events.EventTarget');
-goog.require('goog.functions');
 goog.require('goog.fx.Transition.EventType');
-goog.require('goog.math');
-goog.require('goog.math.Vec2');
+goog.require('goog.math.Coordinate');
 goog.require('goog.style');
+goog.require('help.animation.Arc');
 goog.require('help.easing');
 goog.require('pstj.animation.browser');
 goog.require('pstj.animation.create');
@@ -33,14 +32,12 @@ help.component.IconAnimation = goog.defineClass(goog.events.EventTarget, {
     this.animation_ = pstj.animation.create(
         goog.asserts.assertFunction(goog.bind(this.measure, this)),
         goog.asserts.assertFunction(goog.bind(this.mutate, this)), null);
+    /** @private {!help.animation.Arc} */
+    this.animationConfig_ = new help.animation.Arc();
     /** @private {number} */
     this.startTime_ = 0;
     /** @private {?Element} */
     this.element_ = null;
-    /** @private {?goog.math.Vec2} */
-    this.elementVector_ = null;
-    /** @private {?goog.math.Vec2} */
-    this.pivotVector_ = null;
   },
 
   /** @param {number} ms */
@@ -59,34 +56,26 @@ help.component.IconAnimation = goog.defineClass(goog.events.EventTarget, {
    * Sets up the internal state so we can use the object to produce the
    * bindings.
    * @param {!Element} el The element we will be animating.
-   * @param {!Element} targetElement The element which we want to measure and
-   * animate to.
+   * @param {!goog.math.Coordinate} toPoint The point to which to animate.
+   * @param {help.animation.Arc.Quadrant} quadrant
    * @param {boolean=} opt_usescale If we should use the scale as well.
    */
-  setup: function(el, targetElement, opt_usescale) {
+  setup: function(el, toPoint, quadrant, opt_usescale) {
     this.useScaling_ = !!opt_usescale;
     this.element_ = el;
-    var cr = targetElement.getBoundingClientRect();
-    var ecr = el.getBoundingClientRect();
-    this.elementVector_ = new goog.math.Vec2(ecr.left, ecr.top);
-    this.pivotVector_ = this.calculatePivotVector(
-        this.elementVector_, new goog.math.Vec2(cr.left, cr.top),
-        help.easing.Angle);
+    var elrect = el.getBoundingClientRect();
+    this.setupAnimationConfig(
+        new goog.math.Coordinate(elrect.left, elrect.top), toPoint, quadrant);
   },
 
   /**
-   * Given the point to rotate and a pivot point - rotates the point to 60
-   * degrees counter clockwise.
-   *
-   * @protected
-   * @param {!goog.math.Vec2} vec1
-   * @param {!goog.math.Vec2} vec2
-   * @param {number} degrees The rotation to apply - in degrees.
-   * @return {!goog.math.Vec2}
+   * Updates the config of the animation point provider.
+   * @param {!goog.math.Coordinate} sp
+   * @param {!goog.math.Coordinate} ep
+   * @param {help.animation.Arc.Quadrant} quadrant
    */
-  calculatePivotVector: function(vec1, vec2, degrees) {
-    return goog.math.Vec2.rotateAroundPoint(
-        vec1, vec2, goog.math.toRadians(degrees));
+  setupAnimationConfig: function(sp, ep, quadrant) {
+    this.animationConfig_.fromPoints(sp, ep, quadrant);
   },
 
   /**
@@ -104,17 +93,19 @@ help.component.IconAnimation = goog.defineClass(goog.events.EventTarget, {
         this.ts_ - this.startTime_, this.duration_);
     if (fraction < 1) {
       this.animation_();
-    } else if (fraction > 1) {
+    } else if (fraction >= 1) {
       this.dispatchEvent(goog.fx.Transition.EventType.FINISH);
+      pstj.lab.style.css.clearTranslation(this.element_);
       return;
     }
-    var pos = this.calculatePivotVector(
-        goog.asserts.assertInstanceof(this.elementVector_, goog.math.Vec2),
-        goog.asserts.assertInstanceof(this.pivotVector_, goog.math.Vec2),
-        (help.easing.Angle * help.easing.move(fraction) * -1));
-    var scale =
-        (1.1 -
-         pstj.math.utils.crossRule(0, 1, 0.1, 1, help.easing.scale(fraction)));
+    var pos = this.animationConfig_.getPoint(help.easing.move(fraction));
+    var scale = '';
+    if (this.useScaling_) {
+      scale = 'scale(' + (1.1 -
+                          pstj.math.utils.crossRule(
+                              0, 1, 0.1, 1, help.easing.scale(fraction))) +
+          ')';
+    }
     if (goog.DEBUG) {
       var div = document.createElement('div');
       goog.style.setStyle(div, {
@@ -127,7 +118,6 @@ help.component.IconAnimation = goog.defineClass(goog.events.EventTarget, {
       });
       document.body.appendChild(div);
     }
-    pstj.lab.style.css.setTranslation(
-        this.element_, pos.x, pos.y, 'px', 'scale(' + scale + ')');
+    pstj.lab.style.css.setTranslation(this.element_, pos.x, pos.y, 'px', scale);
   }
 });

@@ -2,9 +2,12 @@ goog.provide('help.component.IconContainer');
 goog.provide('help.component.IconContainerRenderer');
 
 goog.require('goog.asserts');
+goog.require('goog.dom.ViewportSizeMonitor');
+goog.require('goog.events.EventType');
 goog.require('goog.math.Coordinate');
 goog.require('goog.style');
 goog.require('goog.ui.registry');
+goog.require('help.animation.Arc');
 /** @suppress {extraRequire} */
 goog.require('help.component.Icon');
 goog.require('help.component.IconAnimation');
@@ -45,33 +48,85 @@ help.component.IconContainer = goog.defineClass(pstj.app.UiControl, {
     this.setDispatchTransitionEvents(goog.ui.Component.State.HOVER, true);
   },
 
+  /**
+   * Calculates the temporary point on which we should stop the icon
+   * when showing the initial help screen.
+   *
+   * @private
+   * @param {?goog.math.Size=} opt_size
+   * @return {!goog.math.Coordinate}
+   */
+  getTemporaryTargetPoint_: function(opt_size) {
+    if (!goog.isDefAndNotNull(opt_size)) {
+      opt_size = goog.dom.ViewportSizeMonitor.getInstanceForWindow().getSize();
+    }
+    return new goog.math.Coordinate(
+        Math.round(opt_size.width * 0.1 + 5),
+        Math.round(opt_size.height - 150 - 5));
+  },
+
   /** @override */
   onTap: function(e) {
     if (!this.hasBeenClicked_) {
       this.hasBeenClicked_ = true;
       this.setHighlighted(false);
       this.getController().push(help.topic.SHOW_HELP_INTRO, undefined);
-      this.goToTarget(
-          goog.asserts.assert(
-              /** @type {!Element} */ (
-                  document.querySelector('.' + help.HIDE_TARGET_CLASS))));
     }
   },
 
   /**
-   * Go to the pre-defined point. With animation.
-   * @param {!Element} el The element to which to animation our control.
-   * @param {boolean=} opt_dispose If we should dispse of the icon after the
-   * animation.
+   * Go to a specified point on the
+   * @param {?goog.math.Coordinate} point
+   * @param {help.animation.Arc.Quadrant} quadrant
+   * @param {boolean=} opt_usescale
+   * @param {boolean=} opt_dispose
    */
-  goToTarget: function(el, opt_dispose) {
+  goToPoint: function(point, quadrant, opt_usescale, opt_dispose) {
+    if (goog.isNull(point)) point = this.getTemporaryTargetPoint_();
     if (opt_dispose) {
       this.getHandler().listenOnce(
           this.animation_, goog.fx.Transition.EventType.FINISH,
           function(e) { this.dispose(); });
+    } else {
+      this.getHandler().listenOnce(
+          this.animation_, goog.fx.Transition.EventType.FINISH, function(e) {
+            this.setOnScreen(this.getTemporaryTargetPoint_());
+            this.getHandler().listen(
+                goog.dom.ViewportSizeMonitor.getInstanceForWindow(),
+                goog.events.EventType.RESIZE, function(e) {
+                  this.setOnScreen(this.getTemporaryTargetPoint_());
+                });
+          });
     }
-    this.animation_.setup(this.getElementStrict(), el);
+    this.animation_.setup(
+        this.getElementStrict(), point, quadrant, !!opt_usescale);
     this.animation_.play();
+  },
+
+  /**
+   * Reposition the icon on screen after it was moved once from its initial
+   * poision.
+   *
+   * @protected
+   * @param {!goog.math.Coordinate} point
+   */
+  setOnScreen: function(point) {
+    goog.style.setStyle(
+        this.getElementStrict(),
+        {'top': `${point.y}px`, 'left': `${point.x}px`});
+  },
+
+  /**
+   * Go to the upper left corner of an element using animation.
+   * @param {!Element} el
+   * @param {help.animation.Arc.Quadrant} quadrant
+   * @param {boolean=} opt_usescale
+   * @param {boolean=} opt_dispose
+   */
+  goToTarget: function(el, quadrant, opt_usescale, opt_dispose) {
+    var rect = el.getBoundingClientRect();
+    var point = new goog.math.Coordinate(rect.left, rect.top);
+    this.goToPoint(point, quadrant, opt_usescale, opt_dispose);
   },
 
   /** @override */
