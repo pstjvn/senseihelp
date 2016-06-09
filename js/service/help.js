@@ -54,7 +54,7 @@ help.service.Help = function() {
       this.iconContainer_.goToPoint(
           point, help.animation.Arc.Quadrant.THREE, true, true);
     }
-  }, 50, this);
+  }, 120, this);
   this.init();
   this.initFrame();
 };

@@ -2,9 +2,10 @@ goog.module('help.service.Highlighter');
 
 var Control = goog.require('pstj.control.Control');
 var array = goog.require('goog.array');
-var style = goog.require('goog.style');
 var classlist = goog.require('goog.dom.classlist');
+var css = goog.require('pstj.lab.style.css');
 var dom = goog.require('goog.dom');
+var style = goog.require('goog.style');
 
 /** @const {string} */
 const Selector = '[data-intro]';
@@ -98,6 +99,7 @@ const Highlighter = class extends Control {
     style.setStyle(
         div,
         {'position': 'absolute', 'top': `${coor.y}px`, 'left': `${coor.x}px`});
+    css.setTranslation(div, -100, 0, '%');
     document.body.appendChild(div);
     this.badges_.push(div);
   }
