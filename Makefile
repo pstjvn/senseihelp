@@ -1,5 +1,5 @@
 ns = app
-dto_prefix = notused
+dto_prefix = app
 use_worker = false
 locale = en
 build_dir = build

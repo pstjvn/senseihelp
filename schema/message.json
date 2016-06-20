@@ -1,0 +1,18 @@
+{
+  "$schema": "",
+  "title": "Message",
+  "description": "The messages that will be tranfered between the app wins",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "helpIndex": {
+      "type": "number"
+    }
+  },
+  "required": "$_all"
+}

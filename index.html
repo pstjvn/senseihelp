@@ -8,6 +8,13 @@
 		<link rel="stylesheet/less" type="text/css" href="less/app.less">
     <script> var less = { env: "development", poll: 1000 }; </script>
     <script src="libs/less.js"></script>
+    <script>
+    	var CLOSURE_UNCOMPILED_DEFINES = {
+		    'goog.ui.Component.ALLOW_DETACHED_DECORATION': true,
+		    'goog.json.USE_NATIVE_JSON': true,
+        'goog.Promise.LONG_STACK_TRACES': true
+	    };
+    </script>
 	</head>
 	<body>
 		<script src="build/app-cssmap.js"></script>

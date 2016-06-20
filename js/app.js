@@ -11,6 +11,12 @@
 
 goog.provide('app');
 
-goog.require('help.service.Viz');
+goog.require('help.control.HelpViewer');
 
-help.service.Viz.getInstance().init();
+var viewer = help.control.HelpViewer.getInstance();
+viewer.init();
+
+if (goog.DEBUG) {
+  console.log('Show intro as test.');
+  viewer.test();
+}
