@@ -4,10 +4,11 @@
  */
 goog.provide('inject');
 
-goog.require('help.service.Help');
+// goog.require('help.service.Help');
+goog.require('help.control.Help');
 // goog.require('pstj.storage.Storage');
 
-var hs = new help.service.Help();
+// var hs = new help.service.Help();
 
 // goog.exportSymbol('closure.help.showIcon', function() {
 //   var cnt = new help.component.IconContainer();
@@ -25,15 +26,21 @@ var hs = new help.service.Help();
 //   }
 // });
 
-if (goog.DEBUG) {
-  hs.showIcon();
-} else {
-  goog.exportSymbol('help.init', function(url) { hs.showIcon(); });
 
-  goog.exportSymbol('help.activate', function() {
-    // Read the current URL
-    // Load relevant docs
-    // Show header of those docs.
-    hs.activateForUrl('a');
-  });
+help.control.Help.getInstance().init();
+
+if (goog.DEBUG) {
+  // hs.showIcon();
 }
+
+goog.exportSymbol('help.changeViewLocation', function(link) {
+  console.log('Change the loaded help file', link);
+});
+// goog.exportSymbol('help.init', function(url) { hs.showIcon(); });
+
+// goog.exportSymbol('help.activate', function() {
+//   // Read the current URL
+//   // Load relevant docs
+//   // Show header of those docs.
+//   hs.activateForUrl('a');
+// });

@@ -37,6 +37,7 @@ help.control.HelpViewer = class extends pstj.control.Control {
   handleMessageInternal(msg) {
     switch (msg.type) {
       case help.message.Type.LOCATION:
+
         break;
       case help.message.Type.INTRO:
         var node = goog.dom.safeHtmlToNode(help.template.Introduction().toSafeHtml());

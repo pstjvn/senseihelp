@@ -13,18 +13,21 @@
 
 goog.provide('help.control.Help');
 
+goog.require('app.gen.dto.Message');
 goog.require('goog.Promise');
 goog.require('goog.async.Delay');
 goog.require('goog.events');
+goog.require('goog.math.Coordinate');
 goog.require('goog.net.IframeLoadMonitor');
 goog.require('help.component.Container');
 goog.require('help.component.IconContainer');
 goog.require('help.service.Highlighter');
 goog.require('help.topic');
 
-help.control.Help = class extends pstj.control.Control {
-  constructor() {
-    super();
+/** Implements the help controller */
+help.control.Help = goog.defineClass(pstj.control.Control, {
+  constructor: function() {
+    pstj.control.Control.call(this);
     /** @private {!help.component.Container} */
     this.helpContainer_ = new help.component.Container();
     /** @private {!help.component.IconContainer} */
@@ -33,6 +36,8 @@ help.control.Help = class extends pstj.control.Control {
     this.helpViewerFramePromise_ = null;
     /** @private {?Window} */
     this.channel_ = null;
+
+    this.frame = null;
     /**
      * Delays the highligher - it is a component that is used to find all
      * marked elements in the markup and show indexes on them. We need to
@@ -42,8 +47,7 @@ help.control.Help = class extends pstj.control.Control {
      * @private {!goog.async.Delay}
      */
     this.delay_ = new goog.async.Delay(function() {
-      console.log('Set classes');
-      highlighter.setEnabled(true)
+      help.service.Highlighter.getInstance().setEnabled(true)
     }, 500);
     /** @private {!goog.async.Delay} */
     this.hideDelay_ = new goog.async.Delay(function() {
@@ -56,85 +60,88 @@ help.control.Help = class extends pstj.control.Control {
             point, help.animation.Arc.Quadrant.THREE, true, true);
       }
     }, 120, this);
-  }
+  },
+
+  /**
+   * Logger test
+   * @type {goog.debug.Logger}
+   * @protected
+   */
+  logger: goog.log.getLogger('help.control.Help'),
 
   /** @override */
-  init() {
-    super.init();
-    this.listen(help.topic.SHOW_INTRO, this.handleShowIntroRequest);
-    this.listen(help.topic.SHOW_INDEX, this.handleShowIndexRequest);
+  init: function() {
+    goog.base(this, 'init');
+    this.listen(help.topic.SHOW_HELP_INTRO, this.handleShowIntroRequest);
+    this.listen(help.topic.SHOW_INDEXED_HELP, this.handleShowIndexRequest);
     this.listen(help.topic.HIDE, this.handleHideRequest);
     this.initializeViewerFrame_();
     // Setup UI components...
     this.helpContainer_.render(document.body);
     this.helpViewerFramePromise_.then(function(frame) {
-      this.helpContainer_.getContentElement().appendChild(this.frame);
+      this.helpContainer_.getContentElement().appendChild(frame);
     });
     this.iconContainer_.setVisible(false);
     this.iconContainer_.render(document.body);
-  }
+  },
 
   /**
    * @private
    * @return {!HTMLIFrameElement}
    */
-  cerateFrame_() {
+  createFrame_: function() {
     return (/** @type {!HTMLIFrameElement} */ (goog.dom.createDom('iframe', {
-      'src': help.service.FRAME_URL,
+      'src': help.control.Help.FRAME_URL,
       'width': '100%',
       'height': '100%',
       'frameBorder': '0'
     })));
-  }
+  },
 
-  resolver_(resolve, reject) {
-    if (this.frame != null) {
-      var flm = new goog.net.IframeLoadMonitor(this.createFrame_());
-      goog.events.listenOnce(flm, goog.net.IframeLoadMonitor.LOAD_EVENT, function(e) {
-        var frame = flm.getIFrame();
-        flm.dispose();
-        resolve(frame);
-      });
-    } else {
-      reject(new Error('Frame already exists, reject promise for new frame'));
-    }
-  }
+  resolver_: function(resolve, reject) {
+    var flm = new goog.net.IframeLoadMonitor(this.createFrame_());
+    goog.events.listenOnce(flm, goog.net.IframeLoadMonitor.LOAD_EVENT, function(e) {
+      var frame = flm.getIframe();
+      flm.dispose();
+      resolve(frame);
+    });
+  },
 
   /**
    * Sets up the window for the help system.
    * @param {!HTMLIFrameElement} frame
    * @private
    */
-  setupChannel_(frame) {
+  setupChannel_: function(frame) {
     this.channel_ = goog.dom.getFrameContentWindow(frame);
-  }
+  },
 
   /**
    * Handles the rejection of the frame promise.
-   * @param {Error} e
+   * @param {*} e
    * @private
    */
-  handleFrameError_(e) {
+  handleFrameError_: function(e) {
     throw new Error('Cannot establish link to help viewer frame');
-  }
+  },
 
   /**
    * Takes care of creating the promise for the loaded iframe.
    * @private
    */
-  initializeViewerFrame_() {
+  initializeViewerFrame_: function() {
     if (this.helpViewerFramePromise_ != null) return;
     this.helpViewerFramePromise_ = new goog.Promise(this.resolver_, this);
     this.helpViewerFramePromise_.then(this.setupChannel_, this.handleFrameError_, this);
-  }
+  },
 
   /**
    * Sends a message via the channel (when opened).
    * @param {!app.gen.dto.Message} msg
    */
-  sendMessage(msg) {
+  sendMessage: function(msg) {
     var message = msg.toJSON();
-    this.helpViewerFramePromise_.thenVoid(function(_) {
+    this.helpViewerFramePromise_.then(function(_) {
       if (!this.helpContainer_.isOpen()) {
         this.helpContainer_.setOpen(true);
         this.getHandler().listenOnce(
@@ -147,98 +154,104 @@ help.control.Help = class extends pstj.control.Control {
         this.channel_.postMessage(message, '*');
       }
     }, null, this);
-  }
+  },
 
   /** Helper function */
-  showIcon() {
+  showIcon: function() {
     this.iconContainer_.setVisible(true);
   }
-}
+});
+goog.addSingletonGetter(help.control.Help);
+
+/**
+ * @define {string} URL of the frame help.
+ */
+goog.define('help.control.Help.FRAME_URL', 'helpsystem.html');
 
 
-/** @override */
-help.service.Help.prototype.init = function() {
-  goog.base(this, 'init');
-  this.listen(help.topic.SHOW_HELP_INTRO, this.handleIntroRequest);
-  this.listen(help.topic.SHOW_INDEXED_HELP, this.handleIndexRequest);
-  this.listen(help.topic.HIDE, this.handleHideRequest);
-};
+// /** @override */
+// help.service.Help.prototype.init = function() {
+//   goog.base(this, 'init');
+//   this.listen(help.topic.SHOW_HELP_INTRO, this.handleIntroRequest);
+//   this.listen(help.topic.SHOW_INDEXED_HELP, this.handleIndexRequest);
+//   this.listen(help.topic.HIDE, this.handleHideRequest);
+// };
 
-/** info */
-help.service.Help.prototype.initFrame = function() {
-  if (goog.isNull(this.frame)) {
-    this.frame =
-        (/** @type {!HTMLIFrameElement} */ (goog.dom.createDom('iframe', {
-          'src': help.service.FRAME_URL,
-          'width': '100%',
-          'height': '100%',
-          'frameBorder': '0'
-        })));
-    var monitor =
-        new goog.net.IframeLoadMonitor(goog.asserts.assert(this.frame));
-    goog.events.listenOnce(
-        monitor, goog.net.IframeLoadMonitor.LOAD_EVENT, function() {
-          this.isReady_ = true;
-          this.channel_ = goog.dom.getFrameContentWindow(this.frame);
-          monitor.dispose();
-        }, false, this);
-  }
+// /** info */
+// help.service.Help.prototype.initFrame = function() {
+//   if (goog.isNull(this.frame)) {
+//     this.frame =
+//         (/** @type {!HTMLIFrameElement} */ (goog.dom.createDom('iframe', {
+//           'src': help.service.FRAME_URL,
+//           'width': '100%',
+//           'height': '100%',
+//           'frameBorder': '0'
+//         })));
+//     var monitor =
+//         new goog.net.IframeLoadMonitor(goog.asserts.assert(this.frame));
+//     goog.events.listenOnce(
+//         monitor, goog.net.IframeLoadMonitor.LOAD_EVENT, function() {
+//           this.isReady_ = true;
+//           this.channel_ = goog.dom.getFrameContentWindow(this.frame);
+//           monitor.dispose();
+//         }, false, this);
+//   }
 
-  if (goog.isNull(this.helpContainer_)) {
-    this.helpContainer_ = new help.component.Container();
-    this.helpContainer_.render(document.body);
-    this.helpContainer_.getContentElement().appendChild(this.frame);
-  }
+//   if (goog.isNull(this.helpContainer_)) {
+//     this.helpContainer_ = new help.component.Container();
+//     this.helpContainer_.render(document.body);
+//     this.helpContainer_.getContentElement().appendChild(this.frame);
+//   }
 
-  if (goog.isNull(this.iconContainer_)) {
-    this.iconContainer_ = new help.component.IconContainer();
-    this.iconContainer_.setVisible(false);
-    this.iconContainer_.render(document.body);
-  }
-};
+//   if (goog.isNull(this.iconContainer_)) {
+//     this.iconContainer_ = new help.component.IconContainer();
+//     this.iconContainer_.setVisible(false);
+//     this.iconContainer_.render(document.body);
+//   }
+// };
 
-/** Handles the requests comming for showing the intro. */
-help.service.Help.prototype.handleIntroRequest = function() {
-  if (this.iconContainer_.isInDocument()) {
-    this.iconContainer_.goToPoint(null, help.animation.Arc.Quadrant.TWO);
-  }
-  this.sendMessage(help.message.INTRO);
-};
+// /** Handles the requests comming for showing the intro. */
+// help.service.Help.prototype.handleIntroRequest = function() {
+//   if (this.iconContainer_.isInDocument()) {
+//     this.iconContainer_.goToPoint(null, help.animation.Arc.Quadrant.TWO);
+//   }
+//   this.sendMessage(help.message.INTRO);
+// };
 
-/** @param {help.message} message */
-help.service.Help.prototype.sendMessage = function(message) {
-  if (!this.isReady_) throw new Error('Frame not yet ready');
-  if (!this.helpContainer_.isOpen()) {
-    this.helpContainer_.setOpen(true);
-    this.getHandler().listenOnce(
-        this.helpContainer_.getElement(), goog.events.EventType.TRANSITIONEND,
-        function() {
-          this.delay_.start();
-          this.channel_.postMessage(message, '*');
-        });
-  } else {
-    this.channel_.postMessage(message, '*');
-  }
-};
+// /** @param {help.message} message */
+// help.service.Help.prototype.sendMessage = function(message) {
+//   if (!this.isReady_) throw new Error('Frame not yet ready');
+//   if (!this.helpContainer_.isOpen()) {
+//     this.helpContainer_.setOpen(true);
+//     this.getHandler().listenOnce(
+//         this.helpContainer_.getElement(), goog.events.EventType.TRANSITIONEND,
+//         function() {
+//           this.delay_.start();
+//           this.channel_.postMessage(message, '*');
+//         });
+//   } else {
+//     this.channel_.postMessage(message, '*');
+//   }
+// };
 
-/** Handles the requests comming for showing the intro. */
-help.service.Help.prototype.handleIndexRequest = function(idx) {
+// /** Handles the requests comming for showing the intro. */
+// help.service.Help.prototype.handleIndexRequest = function(idx) {
 
-};
+// };
 
 
-/** Handles the requests comming for showing the intro. */
-help.service.Help.prototype.handleHideRequest = function() {
-  highlighter.setEnabled(false);
-  this.hideDelay_.start();
-};
+// /** Handles the requests comming for showing the intro. */
+// help.service.Help.prototype.handleHideRequest = function() {
+//   highlighter.setEnabled(false);
+//   this.hideDelay_.start();
+// };
 
-help.service.Help.prototype.activateForUrl = function(url) {
-  this.sendMessage(help.message.HEAD);
-};
+// help.service.Help.prototype.activateForUrl = function(url) {
+//   this.sendMessage(help.message.HEAD);
+// };
 
-help.service.Help.prototype.showIcon = function() {
-  this.iconContainer_.setVisible(true);
-};
+// help.service.Help.prototype.showIcon = function() {
+//   this.iconContainer_.setVisible(true);
+// };
 
-});  // goog.scope
+// });  // goog.scope

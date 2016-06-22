@@ -1,5 +1,6 @@
 ns = app
 dto_prefix = app
+use_dto = true
 use_worker = false
 locale = en
 build_dir = build
@@ -146,7 +147,7 @@ soytemplates:
 
 # Also includes the dto generation if we are building that namespace
 jsdependencies:
-	@if [ "$(ns)" == "$(dto_prefix)" ]; then \
+	@if $(use_dto); then \
 		make schemes; \
 	fi
 	$(python) $(closure_depswriter) \

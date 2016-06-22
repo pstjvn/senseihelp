@@ -13,6 +13,5 @@
     "helpIndex": {
       "type": "number"
     }
-  },
-  "required": "$_all"
+  }
 }

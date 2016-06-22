@@ -1,47 +1,43 @@
-goog.module('help.service.Highlighter');
+goog.provide('help.service.Highlighter');
 
-var Control = goog.require('pstj.control.Control');
-var array = goog.require('goog.array');
-var classlist = goog.require('goog.dom.classlist');
-var css = goog.require('pstj.lab.style.css');
-var dom = goog.require('goog.dom');
-var style = goog.require('goog.style');
-
-/** @const {string} */
-const Selector = '[data-intro]';
-
-/** @const {string} */
-const ClassName = goog.getCssName('help-item-exposed');
+goog.require('pstj.control.Control');
+goog.require('goog.array');
+goog.require('goog.dom.classlist');
+goog.require('pstj.lab.style.css');
+goog.require('goog.dom');
+goog.require('goog.style');
 
 /** Implements our class */
-const Highlighter = class extends Control {
-  constructor() {
-    super();
+help.service.Highlighter = goog.defineClass(pstj.control.Control, {
+  constructor: function() {
+    pstj.control.Control.call(this);
     /** @private {Array<Element>} */
     this.elements_ = [];
     /** @private {Array<string>} */
     this.originalStyles_ = [];
     /** @private {Array<Element>} */
     this.badges_ = [];
-  }
+  },
 
   /** @private */
-  findElements_() {
+  findElements_: function() {
     this.cleanUp();
-    array.forEach(document.querySelectorAll(Selector), this.addElement, this);
-  }
+    goog.array.forEach(
+        document.querySelectorAll(help.service.Highlighter.Selector),
+        this.addElement, this);
+  },
 
   /**
    * Enable / disable the elements.
    * @param {boolean} enable
    */
-  setEnabled(enable) {
+  setEnabled: function(enable) {
     if (enable) {
       this.findElements_();
     } else {
       this.cleanUp();
     }
-  }
+  },
 
   /**
    * Adds new element.
@@ -49,24 +45,24 @@ const Highlighter = class extends Control {
    * @param {Element} el
    * @param {number} index
    */
-  addElement(el, index) {
+  addElement: function(el, index) {
     this.elements_.push(el);
     this.saveOriginalStyle(el, index, null);
     this.addCustomStyle(el, index, null);
     this.addBadge(el, index, null);
-  }
+  },
 
   /**
    * Remove references.
    * @protected
    */
-  cleanUp() {
-    array.forEach(this.elements_, this.restoreOriginalStyle, this);
-    array.forEach(this.badges_, dom.removeNode);
-    array.clear(this.badges_);
-    array.clear(this.originalStyles_);
-    array.clear(this.elements_);
-  }
+  cleanUp: function() {
+    goog.array.forEach(this.elements_, this.restoreOriginalStyle, this);
+    goog.array.forEach(this.badges_, goog.dom.removeNode);
+    goog.array.clear(this.badges_);
+    goog.array.clear(this.originalStyles_);
+    goog.array.clear(this.elements_);
+  },
 
   /**
    * @protected
@@ -74,9 +70,9 @@ const Highlighter = class extends Control {
    * @param {number} index
    * @param {Array<Element>} list
    */
-  saveOriginalStyle(el, index, list) {
+  saveOriginalStyle: function(el, index, list) {
     // this.originalStyles_.push(style.getStyle(el, Property));
-  }
+  },
 
   /**
    * @protected
@@ -84,7 +80,9 @@ const Highlighter = class extends Control {
    * @param {number} index
    * @param {Array<Element>} list
    */
-  addCustomStyle(el, index, list) { classlist.add(el, ClassName); }
+  addCustomStyle: function(el, index, list) {
+    goog.dom.classlist.add(el, help.service.Highlighter.ClassName);
+  },
 
   /**
    * @protected
@@ -92,17 +90,17 @@ const Highlighter = class extends Control {
    * @param {number} index
    * @param {Array<Element>} list
    */
-  addBadge(el, index, list) {
-    var div = dom.createDom(
+  addBadge: function(el, index, list) {
+    var div = goog.dom.createDom(
         'div', goog.getCssName('help-item-badge'), (index + 1).toString());
     var coor = goog.style.getPageOffset(el);
-    style.setStyle(
+    goog.style.setStyle(
         div,
         {'position': 'absolute', 'top': `${coor.y}px`, 'left': `${coor.x}px`});
-    css.setTranslation(div, -100, 0, '%');
+    pstj.lab.style.css.setTranslation(div, -100, 0, '%');
     document.body.appendChild(div);
     this.badges_.push(div);
-  }
+  },
 
   /**
    * @protected
@@ -110,14 +108,17 @@ const Highlighter = class extends Control {
    * @param {number} index
    * @param {Array<Element>} list
    */
-  restoreOriginalStyle(el, index, list) {
-    classlist.remove(el, ClassName);
+  restoreOriginalStyle: function(el, index, list) {
+    goog.dom.classlist.remove(el, help.service.Highlighter.ClassName);
     // styles.setStyle(el, Property, this.originalStyles_[index] || '');
-  }
-};
+  },
 
-/**
- * Export the instance.
- * @type {!Highlighter}
- */
-exports = (new Highlighter());
+  statics: {
+    /** @const {string} */
+    Selector: '[data-intro]',
+
+    /** @const {string} */
+    ClassName: goog.getCssName('help-item-exposed')
+  }
+});
+goog.addSingletonGetter(help.service.Highlighter);
