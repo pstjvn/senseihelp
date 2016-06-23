@@ -41,11 +41,8 @@ help.component.IconContainer = goog.defineClass(pstj.app.UiControl, {
      * @final
      */
     this.animation_ = new help.component.IconAnimation();
-    this.setUsePointerAgent(true);
-    this.setHandleMouseEvents(true);
-    this.setSupportedState(goog.ui.Component.State.HOVER, true);
-    this.setAutoStates(goog.ui.Component.State.HOVER, true);
-    this.setDispatchTransitionEvents(goog.ui.Component.State.HOVER, true);
+    this.setUsePointerAgent(false);
+    this.setHandleMouseEvents(false);
   },
 
   /**
@@ -61,8 +58,8 @@ help.component.IconContainer = goog.defineClass(pstj.app.UiControl, {
       opt_size = goog.dom.ViewportSizeMonitor.getInstanceForWindow().getSize();
     }
     return new goog.math.Coordinate(
-        Math.round(opt_size.width * 0.1 + 5),
-        Math.round(opt_size.height - 150 - 5));
+        Math.round(opt_size.width * 0.1 + 10),
+        Math.round(opt_size.height / 2 - 85));
   },
 
   /** @override */

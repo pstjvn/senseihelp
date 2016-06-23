@@ -23,27 +23,23 @@ help.control.HelpViewer = class extends pstj.control.Control {
         window, goog.events.EventType.MESSAGE, this.handleMessage_);
   }
 
-  test() {
-    var msg = new app.gen.dto.Message();
-    msg.fromJSON({
-      'type': help.message.Type.INTRO,
-      'index': 0,
-      'location': ''
-    });
-    this.handleMessageInternal(msg);
-  }
-
-  /** @protected */
+  /**
+   * @param {app.gen.dto.Message} msg
+   * @protected
+   */
   handleMessageInternal(msg) {
+    console.log('Received message over bridge', msg.type);
     switch (msg.type) {
       case help.message.Type.LOCATION:
-
+        console.log('Requested change of location');
         break;
-      case help.message.Type.INTRO:
+      case help.message.Type.FIRSTTIME:
+        console.log('Requested show of first time message');
         var node = goog.dom.safeHtmlToNode(help.template.Introduction().toSafeHtml());
         this.main_.getElement().appendChild(node);
         break;
       case help.message.Type.INDEX:
+        console.log('Requested show of indexed help', msg.helpIndex);
         break;
       default: throw new Error(`Unknown message type: ${msg.type}`);
     }
@@ -54,6 +50,7 @@ help.control.HelpViewer = class extends pstj.control.Control {
    * @private
    */
   handleMessage_(e) {
+    console.log('Recevined new message from bridge');
     var msg = new app.gen.dto.Message();
     msg.fromJSON(goog.json.parse(e.getBrowserEvent()['data']));
     this.handleMessageInternal(msg);

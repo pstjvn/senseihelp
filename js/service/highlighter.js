@@ -5,7 +5,11 @@ goog.require('goog.array');
 goog.require('goog.dom.classlist');
 goog.require('pstj.lab.style.css');
 goog.require('goog.dom');
+goog.require('goog.dom.dataset');
+goog.require('goog.events');
+goog.require('goog.events.EventType');
 goog.require('goog.style');
+goog.require('help.topic');
 
 /** Implements our class */
 help.service.Highlighter = goog.defineClass(pstj.control.Control, {
@@ -17,6 +21,14 @@ help.service.Highlighter = goog.defineClass(pstj.control.Control, {
     this.originalStyles_ = [];
     /** @private {Array<Element>} */
     this.badges_ = [];
+    /** @private {boolean} */
+    this.enabled_ = false;
+    goog.events.listen(document.body, goog.events.EventType.CLICK, function(e) {
+      var idx = goog.dom.dataset.get(e.target, help.service.Highlighter.IndexDataName);
+      if (idx) {
+        this.push(help.topic.SHOW_INDEXED_HELP, parseInt(idx, 10));
+      }
+    }, false, this);
   },
 
   /** @private */
@@ -32,10 +44,13 @@ help.service.Highlighter = goog.defineClass(pstj.control.Control, {
    * @param {boolean} enable
    */
   setEnabled: function(enable) {
-    if (enable) {
-      this.findElements_();
-    } else {
-      this.cleanUp();
+    if (enable != this.enabled_) {
+      this.enabled_ = enable;
+      if (enable) {
+        this.findElements_();
+      } else {
+        this.cleanUp();
+      }
     }
   },
 
@@ -94,6 +109,7 @@ help.service.Highlighter = goog.defineClass(pstj.control.Control, {
     var div = goog.dom.createDom(
         'div', goog.getCssName('help-item-badge'), (index + 1).toString());
     var coor = goog.style.getPageOffset(el);
+    goog.dom.dataset.set(div, help.service.Highlighter.IndexDataName, index.toString());
     goog.style.setStyle(
         div,
         {'position': 'absolute', 'top': `${coor.y}px`, 'left': `${coor.x}px`});
@@ -114,6 +130,9 @@ help.service.Highlighter = goog.defineClass(pstj.control.Control, {
   },
 
   statics: {
+    /** @const {string} */
+    IndexDataName: 'helpidx',
+
     /** @const {string} */
     Selector: '[data-intro]',
 

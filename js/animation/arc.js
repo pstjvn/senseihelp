@@ -6,10 +6,6 @@ goog.require('goog.math.Coordinate');
 /** Provides means to use Arc animation as part of elipsis. */
 help.animation.Arc = class {
   constructor() {
-    // /** @private {!goog.math.Coordinate} */
-    // this.startPoint_ = new goog.math.Coordinate();
-    // /** @private {!goog.math.Coordinate} */
-    // this.endPoint_ = new goog.math.Coordinate();
     /** @private {!goog.math.Coordinate} */
     this.centerPoint_ = new goog.math.Coordinate();
     /** @private {!goog.math.Coordinate} */

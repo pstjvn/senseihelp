@@ -11,12 +11,11 @@
 
 goog.provide('app');
 
+goog.require('goog.debug.Console');
 goog.require('help.control.HelpViewer');
 
-var viewer = help.control.HelpViewer.getInstance();
-viewer.init();
-
 if (goog.DEBUG) {
-  console.log('Show intro as test.');
-  viewer.test();
+  (new goog.debug.Console()).setCapturing(true);
 }
+
+help.control.HelpViewer.getInstance().init();

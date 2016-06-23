@@ -21,7 +21,7 @@ smjs_lib_dir = ../smjs
 schema_dir = schema
 jssource_dir = js $(autogen_dir) $(template_build_dir)
 debug = true
-
+node=nodejs
 # Setup shell as it is not bash in Ubuntu...
 SHELL=/bin/bash
 
@@ -133,7 +133,7 @@ builddirectories:
 	mkdir -p $(template_build_dir)
 
 schemes:
-	node $(pstj_lib_dir)/nodejs/dtogen.js $(dto_prefix).gen.dto $(schema_dir)/ $(autogen_dir)/
+	$(node) $(pstj_lib_dir)/nodejs/dtogen.js $(dto_prefix).gen.dto $(schema_dir)/ $(autogen_dir)/
 
 soymessages:
 	$(java) $(soy_message_extractor) \
@@ -257,7 +257,7 @@ modulebuild: modulelist
 			--module_wrapper="c:(function(__){%s})(pns);" \
 			--rename_prefix_namespace="__" \
 			$(shell cat $(modules_manifest) | tr '\n' ' ')
-	node bin/main.js
+	$(node) bin/main.js
 
 
 distribution:

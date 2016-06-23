@@ -42,6 +42,17 @@
         border-radius: 5px 5px 0px 0px;
         transform: translate3d(-50%, 100%, 0);
         transition: transform 500ms ease-out;
+        bottom: 0;
+        left: 50%;
+        height: 140px;
+      }
+
+      .help-container.first-time {
+        bottom: 50%;
+      }
+
+      .help-container.first-time.help-container-open {
+        transform: translate3d(-50%, 50%, 0);
       }
 
       .help-container-open {
@@ -61,12 +72,12 @@
   </head>
   <body>
     <div class="help-hide-target"></div>
-    <script type="text/javascript" src="build/inject.min.js"></script>
-<!--     <script src="build/app-cssmap.js"></script>
+    <!--<script type="text/javascript" src="build/inject.min.js"></script>-->
+    <script src="build/app-cssmap.js"></script>
     <script src="../../library/closure/goog/base.js"></script>
     <script src="../../templates/deps.js"></script>
     <script src="../pstj/deps.js"></script>
     <script src="build/deps.js"></script>
-    <script>goog.require('inject');</script> -->
+    <script>goog.require('inject');</script>
   </body>
 </html>

@@ -16,3 +16,9 @@ help.topic.SHOW_INDEXED_HELP =
 
 /** @type {!goog.pubsub.TopicId<undefined>} */
 help.topic.HIDE = new goog.pubsub.TopicId(goog.events.getUniqueId('h'));
+
+/** @type {!goog.pubsub.TopicId<undefined>} */
+help.topic.FIRST_TIME = new goog.pubsub.TopicId(goog.events.getUniqueId('ft'));
+
+/** @type {!goog.pubsub.TopicId<string>} */
+help.topic.LOCATION = new goog.pubsub.TopicId(goog.events.getUniqueId('l'));

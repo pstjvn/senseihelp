@@ -61,10 +61,7 @@ help.component.ContainerRenderer =
       applyDefaultStyles: function(el) {
         goog.style.setStyle(el, {
           'position': 'fixed',
-          'width': '80%',
-          'height': '140px',
-          'bottom': '0',
-          'left': '50%',
+          'width': '80%'
         });
       },
 
