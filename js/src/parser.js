@@ -55,18 +55,4 @@ help.parser.parse = function(txt) {
     main: introtext,
     items: helps
   };
-
-  // var html = goog.array.map(helps, function(help, idx) {
-  //   var str = '';
-  //   var a = goog.array.forEach(help, function(item) {
-  //     str += `<p>${item}</p>`;
-  //   });
-  //   return `<div href="#local${idx}">${str}</div>`;
-  // });
-
-  // return html.join('');
-  // var div = document.createElement('div');
-  // div.innerHTML = html.join('');
-  // document.body.appendChild(div);
-  // console.log(html.join(''));
 };

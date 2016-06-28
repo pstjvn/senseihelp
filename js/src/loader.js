@@ -1,6 +1,7 @@
 goog.provide('help.loader');
 
 goog.require('goog.labs.net.xhr');
+goog.require('help.service.url');
 
 /**
  * Simple wrapper around the getter. We do this because we might want to use
@@ -12,5 +13,5 @@ goog.require('goog.labs.net.xhr');
  * @return {!goog.Promise<string>} The downloaded content
  */
 help.loader.load = function(url, opt_config) {
-  return goog.labs.net.xhr.get(url, opt_config);
+  return goog.labs.net.xhr.get(help.service.url.parse(url), opt_config);
 };

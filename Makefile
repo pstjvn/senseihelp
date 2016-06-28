@@ -199,6 +199,7 @@ jsmin:
 	$(java) $(js_compiler) \
 			$(build_js_compiler_option) \
 			$(namespace_specific_flags) \
+			--dependency_mode=NONE \
 			--compilation_level=ADVANCED \
 			--flagfile=options/compile.ini \
 			--js_output_file=$(js_min_file) \

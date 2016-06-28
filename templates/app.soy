@@ -58,7 +58,7 @@
   {@param index: int}
   <div class="{css help-item}" data-index="{$index}">
   {foreach $line in $lines}
-    <div class="{css help-item-paragpraph}">
+    <div class="{css help-item-paragraph}">
       {if isFirst($line)}
         {call .ItemNumber}
           {param index: $index + 1 /}
@@ -114,10 +114,17 @@
 
 /** The introduction text */
 {template .Introduction}
-  <div style="padding: 10px;">
+  <div style="padding: 10px; padding-left: 40px">
     <h4>{msg desc="heading text"}Welcome to the HELP CENTER!{/msg}</h4>
     <div>Click on a number on the page to see contextual help for the highlighed element.</div>
     <div>To active the help center again use the upper right corner menu and select help whenever you need more information on the page you see</div>
+  </div>
+{/template}
+
+/** The void text */
+{template .NotAvailable}
+  <div style="padding: 10px; padding-left: 40px">
+    <div>No help is available for this section yet.</div>
   </div>
 {/template}
 

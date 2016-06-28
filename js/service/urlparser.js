@@ -11,5 +11,5 @@ goog.provide('help.service.url');
  * @return {string}
  */
 help.service.url.parse = function(url) {
-  return url;
+  return `assets/help/${url}`;
 };

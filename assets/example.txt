@@ -1,14 +1,16 @@
-General help text - will be displayed in a way as to allow the content to be a paragraph.
-It can span multiple lines.
+Main Campaign Screen Help
 
-If a empty lines is added it will be a separate parapgraph.
+Here you will find list of all campaigns you have access to.
 
-And one more.
+# View saved campaigns for easy access at any time.  Finish or edit a campaign you started previously, or select from a list of frequently used campaigns to create a new one.
 
-# help text number 1
+# These are all the campaigns that are currently ongoing.
 
-# help text number two which is a longer help text.
+You can edit campaigns that have not started. You can also view current campaigns and all their details (view campaign type, timing, delivery method, and selected targets), as well as see campaign reports.
 
-It can also span multiple lines
 
-# end of help.
+# These are all the campaigns that have ended.
+
+You can view each campaign’s details (view campaign type, timing, delivery method, and selected targets), as well as see campaign reports
+
+# These are all the campaigns that have been deleted.

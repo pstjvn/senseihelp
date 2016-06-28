@@ -59,7 +59,7 @@ help.control.Help = goog.defineClass(pstj.control.Control, {
      */
     this.delay_ = new goog.async.Delay(function() {
       goog.log.info(this.logger, 'Activating highligher service');
-      help.service.Highlighter.getInstance().setEnabled(true)
+      help.service.Highlighter.getInstance().setEnabled(true);
     }, 500, this);
     /** @private {!goog.async.Delay} */
     this.hideDelay_ = new goog.async.Delay(function() {
@@ -152,7 +152,9 @@ help.control.Help = goog.defineClass(pstj.control.Control, {
    */
   handleShowIntroRequest: function() {
     goog.log.info(this.logger, 'Show intro for particulat location.');
-    this.helpContainer_.setOpen(true);
+    var msg = new app.gen.dto.Message();
+    msg.type = help.message.Type.INTRO;
+    this.sendMessage(msg);
   },
 
   /**
@@ -165,9 +167,10 @@ help.control.Help = goog.defineClass(pstj.control.Control, {
       this.isFirst_ = false;
       this.hideDelay_.start();
       this.helpContainer_.removeClassName('first-time');
-      // this.iconContainer_.goToTarget()
+    } else {
+      this.helpContainer_.setOpen(false);
     }
-    this.helpContainer_.setOpen(false);
+    help.service.Highlighter.getInstance().setEnabled(false);
   },
 
   /**
@@ -255,14 +258,16 @@ help.control.Help = goog.defineClass(pstj.control.Control, {
     var message = msg.toJSON();
     goog.log.info(this.logger, 'About to send message...');
     this.helpViewerFramePromise_.then(function(_) {
-      goog.log.info(this.logger, 'Sending message over channel');
+      goog.log.info(this.logger, 'Sending message over channel: ' + msg.type);
       this.channel_.postMessage(goog.json.serialize(message), '*');
       if (msg.type != help.message.Type.LOCATION) {
-        goog.log.info(this.logger, 'Help viewer is not open, opening it');
-        if (!this.iconContainer_.isOpen()) {
+        if (!this.helpContainer_.isOpen()) {
+          goog.log.info(this.logger, 'Help viewer is not open, opening it');
+          this.helpContainer_.setOpen(true);
           this.getHandler().listenOnce(
             this.helpContainer_.getElement(), goog.events.EventType.TRANSITIONEND,
               function() {
+                console.log('Are we here?');
                 this.delay_.start();
               });
         }
