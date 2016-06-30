@@ -35,10 +35,14 @@ help.component.MainRenderer = class extends pstj.material.ElementRenderer {
 
   /** @override */
   getCssClass() {
-    console.log('Code is...', help.component.MainRenderer.CSS_CLASS);
+    goog.log.info(this.logger, 'Code is...' + help.component.MainRenderer.CSS_CLASS);
     return help.component.MainRenderer.CSS_CLASS;
   }
 };
+
+/** @protected {goog.debug.Logger} */
+help.component.MainRenderer.prototype.logger =
+    goog.log.getLogger('help.component.Main');
 
 /** @const {string} */
 help.component.MainRenderer.CSS_CLASS = goog.getCssName('help-main-wrapper');

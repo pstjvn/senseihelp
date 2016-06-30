@@ -3,6 +3,7 @@ goog.provide('help.control.HelpViewer');
 goog.require('goog.dom');
 goog.require('goog.events.EventType');
 goog.require('goog.json');
+goog.require('goog.log');
 goog.require('help.component.Main');
 goog.require('help.message');
 goog.require('help.loader');
@@ -57,21 +58,23 @@ help.control.HelpViewer = class extends pstj.control.Control {
    * @protected
    */
   handleMessageInternal(msg) {
-    console.log('Received message over bridge', msg.type);
+    goog.log.info(this.logger, 'Received message over bridge:' + msg.type);
     switch (msg.type) {
 
       // When chaning the location we should load the new file if possible.
       case help.message.Type.LOCATION:
         this.help_ = null;
-        console.log('Requested change of location');
-
+        goog.log.info(this.logger, 'Requested change of location');
         help.loader.load(msg.url).then(function(result) {
-          return help.parser.parse(result)
-        }, null, this).then(function(result) {
-          console.log('Parsed help', result);
+          goog.log.info(this.logger, 'Received file with help, parsing...');
+          return help.parser.parse(result);
+        }, function(e) {
+          goog.log.error(this.logger, 'Error in loading or parsing: ' + e);
+        }, this).then(function(result) {
+          goog.log.info(this.logger, 'Parsed help: ' + result);
           this.help_ = result;
         }, function(err) {
-          console.log('Did not found help file, will not show help for this...');
+          goog.log.error(this.logger, 'Did not found help file, will not show help for this...');
         }, this);
         break;
 
@@ -84,7 +87,7 @@ help.control.HelpViewer = class extends pstj.control.Control {
 
       // When we need to find indexed help.
       case help.message.Type.INDEX:
-        console.log('Requested show of indexed help', msg.helpIndex);
+        goog.log.info(this.logger, 'Requested show of indexed help: ' + msg.helpIndex);
         if (this.help_) {
           this.main_.setContent(this.makeNode(this.help_.items[msg.helpIndex], msg.helpIndex));
         } else {
@@ -111,10 +114,13 @@ help.control.HelpViewer = class extends pstj.control.Control {
    * @private
    */
   handleMessage_(e) {
-    console.log('Recevined new message from bridge');
+    goog.log.info(this.logger, 'Recevined new message from bridge');
     var msg = new app.gen.dto.Message();
     msg.fromJSON(goog.json.parse(e.getBrowserEvent()['data']));
     this.handleMessageInternal(msg);
   }
 };
 goog.addSingletonGetter(help.control.HelpViewer);
+
+/** @protected {goog.debug.Logger} */
+help.control.HelpViewer.prototype.logger = goog.log.getLogger('help.control.HelpViewer');

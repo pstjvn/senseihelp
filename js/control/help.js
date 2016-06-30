@@ -102,6 +102,7 @@ help.control.Help = goog.defineClass(pstj.control.Control, {
       var img = new Image();
       img.src = help.control.Help.IMAGE_URL;
       goog.style.setStyle(img, {
+        'z-index': '9999',
         'position': 'fixed',
         'right': `${size.width - point.x - 30}px`,
         'top': `${point.y + 30}px`
@@ -267,7 +268,6 @@ help.control.Help = goog.defineClass(pstj.control.Control, {
           this.getHandler().listenOnce(
             this.helpContainer_.getElement(), goog.events.EventType.TRANSITIONEND,
               function() {
-                console.log('Are we here?');
                 this.delay_.start();
               });
         }

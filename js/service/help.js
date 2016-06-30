@@ -42,7 +42,6 @@ help.service.Help = function() {
   this.channel_ = null;
   /** @private {!Delay} */
   this.delay_ = new Delay(function() {
-    console.log('Set classes');
     highlighter.setEnabled(true)
   }, 500);
   this.hideDelay_ = new Delay(function() {
