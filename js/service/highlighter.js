@@ -64,7 +64,16 @@ help.service.Highlighter = goog.defineClass(pstj.control.Control, {
     this.elements_.push(el);
     this.saveOriginalStyle(el, index, null);
     this.addCustomStyle(el, index, null);
-    this.addBadge(el, index, null);
+    var idx = goog.dom.dataset.get(el, 'intro');
+    if (!goog.isNull(idx)) {
+      idx = parseInt(idx, 10);
+      if (isNaN(idx)) {
+        idx = index;
+      }
+    } else {
+      idx = index;
+    }
+    this.addBadge(el, idx, null);
   },
 
   /**
