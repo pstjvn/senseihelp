@@ -108,9 +108,15 @@ help.control.Help = goog.defineClass(pstj.control.Control, {
         'top': `${point.y + 30}px`
       });
       document.body.appendChild(img);
-      setTimeout(function() {
+      var listener = null;
+      var to = setTimeout(function() {
+        goog.events.unlistenByKey(listener)
         goog.dom.removeNode(img);
       }, 30000);
+      listener = goog.events.listenOnce(img, goog.events.EventType.CLICK, function(e) {
+        clearTimeout(to);
+        goog.dom.removeNode(img);
+      });
     }, this);
     var il = new goog.net.ImageLoader();
     goog.events.listenOnce(il, goog.net.EventType.COMPLETE, function(e) {
