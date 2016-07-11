@@ -118,10 +118,11 @@ help.service.Highlighter = goog.defineClass(pstj.control.Control, {
     var div = goog.dom.createDom(
         'div', goog.getCssName('help-item-badge'), (index + 1).toString());
     var coor = goog.style.getPageOffset(el);
+    var size = goog.style.getSize(el);
     goog.dom.dataset.set(div, help.service.Highlighter.IndexDataName, index.toString());
     goog.style.setStyle(
         div,
-        {'position': 'absolute', 'top': `${coor.y}px`, 'left': `${coor.x}px`});
+        {'position': 'absolute', 'top': `${coor.y}px`, 'left': `${coor.x + size.width}px`});
     pstj.lab.style.css.setTranslation(div, -100, 0, '%');
     document.body.appendChild(div);
     this.badges_.push(div);
