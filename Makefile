@@ -21,7 +21,7 @@ smjs_lib_dir = ../smjs
 schema_dir = schema
 jssource_dir = js $(autogen_dir) $(template_build_dir)
 debug = true
-node=nodejs
+node=node
 # Setup shell as it is not bash in Ubuntu...
 SHELL=/bin/bash
 
@@ -205,6 +205,31 @@ jsmin:
 			--js_output_file=$(js_min_file) \
 			--js=build/$(ns)-cssmap.min.js \
 			$(shell cat $(manifest) | tr '\n' ' ')
+
+jsexcel:
+	$(java) $(js_compiler) \
+			--charset=UTF-8 \
+			--dependency_mode=STRICT \
+			--define='goog.DEBUG=false' \
+			--process_closure_primitives \
+			--use_types_for_optimization \
+			--warning_level=VERBOSE \
+			--compilation_level=ADVANCED \
+			--entry_point='goog:pstj.mm.questar.ire.excelNumberFormatter' \
+			--flagfile=options/compile.ini \
+			--new_type_inf \
+			--formatting=PRETTY_PRINT \
+			--assume_function_wrapper \
+			--output_wrapper='(function(){%output%})();' \
+			--rewrite_polyfills \
+			--js_output_file=excel.js \
+			$(shell echo $(jssource_dir) | sed 's+$(sed_tokenizer)+--js="./&/**.js"+g') \
+			$(shell echo $(pstj_public_source_dirs) | sed 's+$(sed_tokenizer)+--js="$(pstj_lib_dir)/&/**.js"+g') \
+			--js="../../templates/soyutils_usegoog.js" \
+			--js="$(closure_library_root)/closure/goog/**.js" \
+			--js="$(closure_library_root)/third_party/closure/goog/mochikit/async/deferred.js" \
+			--js="$(closure_library_root)/third_party/closure/goog/mochikit/async/deferredlist.js" \
+			--js="!**_test.js"
 
 jsworker:
 	$(java) $(js_compiler) \
