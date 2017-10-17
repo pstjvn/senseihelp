@@ -1,0 +1,13 @@
+Create new campaign.
+
+# Create a name for your campaign that will help you remember what this campaign is for.  This is the name that will show in the list on the main campaign page.
+
+# Choose how you want to deliver your campaign.  Click the ones you want, in any combination. Remember that you must have the corresponding information, i.e. email addresses or mobile numbers, on file in order to use certain types.
+
+# Delivers your message to the email address on file
+
+# Send messages to mobile app users in the application inbox
+
+# Sends a text message to mobile number on file, recipient message fees may apply
+
+# Creates a scrolling message banner within the mobile application

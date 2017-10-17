@@ -19,6 +19,7 @@ goog.require('goog.async.Delay');
 goog.require('goog.async.nextTick');
 goog.require('goog.dom');
 goog.require('goog.dom.ViewportSizeMonitor');
+goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.json');
 goog.require('goog.log');
@@ -59,6 +60,7 @@ help.control.Help = goog.defineClass(pstj.control.Control, {
      */
     this.delay_ = new goog.async.Delay(function() {
       goog.log.info(this.logger, 'Activating highligher service');
+      document.body.setAttribute('padded-by-help-system', true);
       help.service.Highlighter.getInstance().setEnabled(true);
     }, 500, this);
     /** @private {!goog.async.Delay} */
@@ -110,13 +112,14 @@ help.control.Help = goog.defineClass(pstj.control.Control, {
       document.body.appendChild(img);
       var listener = null;
       var to = setTimeout(function() {
-        goog.events.unlistenByKey(listener)
+        goog.events.unlistenByKey(listener);
         goog.dom.removeNode(img);
       }, 30000);
-      listener = goog.events.listenOnce(img, goog.events.EventType.CLICK, function(e) {
-        clearTimeout(to);
-        goog.dom.removeNode(img);
-      });
+      listener =
+          goog.events.listenOnce(img, goog.events.EventType.CLICK, function(e) {
+            clearTimeout(to);
+            goog.dom.removeNode(img);
+          });
     }, this);
     var il = new goog.net.ImageLoader();
     goog.events.listenOnce(il, goog.net.EventType.COMPLETE, function(e) {
@@ -178,6 +181,7 @@ help.control.Help = goog.defineClass(pstj.control.Control, {
       this.helpContainer_.setOpen(false);
     }
     help.service.Highlighter.getInstance().setEnabled(false);
+    document.body.removeAttribute('padded-by-help-system');
   },
 
   /**
@@ -215,12 +219,13 @@ help.control.Help = goog.defineClass(pstj.control.Control, {
   resolver_: function(resolve, reject) {
     var frame = this.createFrame_();
     var flm = new goog.net.IframeLoadMonitor(frame);
-    goog.events.listenOnce(flm, goog.net.IframeLoadMonitor.LOAD_EVENT, function(e) {
-      goog.log.info(this.logger, 'Frame has loaded in DOM');
-      var frame = flm.getIframe();
-      flm.dispose();
-      resolve(frame);
-    }, false, this);
+    goog.events.listenOnce(
+        flm, goog.net.IframeLoadMonitor.LOAD_EVENT, function(e) {
+          goog.log.info(this.logger, 'Frame has loaded in DOM');
+          var frame = flm.getIframe();
+          flm.dispose();
+          resolve(frame);
+        }, false, this);
     this.helpContainer_.getContentElement().appendChild(frame);
     goog.log.info(this.logger, 'Attached frame to DOM');
 
@@ -254,7 +259,8 @@ help.control.Help = goog.defineClass(pstj.control.Control, {
     if (this.helpViewerFramePromise_ != null) return;
     goog.log.info(this.logger, 'Initializing frame');
     this.helpViewerFramePromise_ = new goog.Promise(this.resolver_, this);
-    this.helpViewerFramePromise_.then(this.setupChannel_, this.handleFrameError_, this);
+    this.helpViewerFramePromise_.then(
+        this.setupChannel_, this.handleFrameError_, this);
   },
 
   /**
@@ -272,10 +278,9 @@ help.control.Help = goog.defineClass(pstj.control.Control, {
           goog.log.info(this.logger, 'Help viewer is not open, opening it');
           this.helpContainer_.setOpen(true);
           this.getHandler().listenOnce(
-            this.helpContainer_.getElement(), goog.events.EventType.TRANSITIONEND,
-              function() {
-                this.delay_.start();
-              });
+              this.helpContainer_.getElement(),
+              goog.events.EventType.TRANSITIONEND,
+              function() { this.delay_.start(); });
         }
       }
     }, null, this);
