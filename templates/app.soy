@@ -2,10 +2,10 @@
 
 /** Used only to test seed project */
 {template .Container}
-<div class="{css help-container}" style="width:80%; height:150px;">
-  <div class="{css help-container-inner}">
+<div class="{css('help-container')}" style="width:80%; height:150px;">
+  <div class="{css('help-container-inner')}">
   </div>
-  <div is class="{css help-button} {css help-button-close} {css core-tap}">
+  <div is class="{css('help-button')} {css('help-button-close')} {css('core-tap')}">
     {msg desc="button"}Close{/msg}
   </div>
 </div>
@@ -15,7 +15,7 @@
 {template .Content}
   {@param main: list<string>}
   {@param items: list<list<string>>}
-  <div class="{css help-content}">
+  <div class="{css('help-content')}">
     {call .Main}
       {param lines: $main /}
     {/call}
@@ -29,9 +29,9 @@
 /** The main (heading) help content should be print via this template */
 {template .Main}
   {@param lines: list<string>}
-  <div class="{css help-main}">
+  <div class="{css('help-main')}">
     {foreach $line in $lines}
-      <div class="{css help-paragraph}">
+      <div class="{css('help-paragraph')}">
         {$line}
       </div>
     {/foreach}
@@ -41,7 +41,7 @@
 /** Template to use for all help items on a page. */
 {template .Items}
   {@param items: list<list<string>>}
-  <div class="{css help-items}">
+  <div class="{css('help-items')}">
     <h6>{msg desc="Help items separator label"}Help for specific items.{/msg}</h6>
     {foreach $item in $items}
       {call .Item}
@@ -56,9 +56,9 @@
 {template .Item}
   {@param lines: list<string>}
   {@param index: int}
-  <div class="{css help-item}" data-index="{$index}">
+  <div class="{css('help-item')}" data-index="{$index}">
   {foreach $line in $lines}
-    <div class="{css help-item-paragraph}">
+    <div class="{css('help-item-paragraph')}">
       {if isFirst($line)}
         {call .ItemNumber}
           {param index: $index + 1 /}
@@ -73,19 +73,19 @@
 /** The template for numbering the items in the help */
 {template .ItemNumber}
   {@param index: int}
-  <div class="{css help-item-indicator}">
+  <div class="{css('help-item-indicator')}">
     <span>{$index}</span>
   </div>
 {/template}
 
 {template .Spacer}
-  <div class="{css help-spacer}"></div>
+  <div class="{css('help-spacer')}"></div>
 {/template}
 
 /** The template for the icon used as help icon in the project */
 {template .HelpIcon}
 {@param color: string}
-<div is class="{css help-icon}" style="width: 100%; height: 100%">
+<div is class="{css('help-icon')}" style="width: 100%; height: 100%">
   <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%"
       viewBox="0 0 290.1 379" enable-background="new 0 0 290.1 379" xml:space="preserve">
@@ -105,7 +105,7 @@
 {/template}
 
 {template .IconContainer}
-  <div is class="{css help-icon-container} {css core-tap}" style="width: 50px; height: 50px;">
+  <div is class="{css('help-icon-container')} {css('core-tap')}" style="width: 50px; height: 50px;">
     {call .HelpIcon}
       {param color: '#000000' /}
     {/call}
@@ -129,5 +129,5 @@
 {/template}
 
 {template .MainWrapper}
-  <div is class="{css help-main-wrapper}"></div>
+  <div is class="{css('help-main-wrapper')}"></div>
 {/template}
